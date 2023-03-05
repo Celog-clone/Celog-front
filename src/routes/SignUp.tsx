@@ -4,22 +4,22 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Button, TextField } from "@mui/material";
 import { signup } from "api";
-import { User } from "types";
+import { NewUser, TextField as ITextField } from "types";
 
-const SignIn = () => {
+const SignUp = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<User>({
+  const [user, setUser] = useState<NewUser>({
+    nickname: "",
     email: "",
     password: "",
   });
 
-  interface ITextField {
-    label: string;
-    color: "primary" | "secondary" | "error" | "info" | "success" | "warning";
-    helperText: string;
-  }
-
+  const [nickNameTextField, setNickNameTextField] = useState<ITextField>({
+    label: "Nickname",
+    color: "info",
+    helperText: "2~10자 이내의 닉네임을 입력해주세요.",
+  });
   const [emailTextField, setEmailTextField] = useState<ITextField>({
     label: "Email",
     color: "info",
@@ -32,6 +32,7 @@ const SignIn = () => {
       "숫자,문자,특수문자 포함 8~15자 이내의 비밀번호를 입력해주세요.",
   });
 
+  const nickNameReg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,10}$/;
   const emailReg =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const pwReg = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
@@ -47,6 +48,18 @@ const SignIn = () => {
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    if (name === "nickName")
+      !nickNameReg.test(value)
+        ? setNickNameTextField({
+            ...nickNameTextField,
+            color: "error",
+            helperText: "2~10자 이내의 닉네임을 입력해주세요.",
+          })
+        : setNickNameTextField({
+            ...nickNameTextField,
+            color: "success",
+            helperText: " ",
+          });
     if (name === "email")
       !emailReg.test(value)
         ? setEmailTextField({
@@ -99,6 +112,15 @@ const SignIn = () => {
             <TextField
               fullWidth
               onChange={onChangeHandler}
+              name="nickName"
+              label={nickNameTextField.label}
+              color={nickNameTextField.color}
+              helperText={nickNameTextField.helperText}
+              error={nickNameTextField.color === "error"}
+            />
+            <TextField
+              fullWidth
+              onChange={onChangeHandler}
               name="email"
               label={emailTextField.label}
               color={emailTextField.color}
@@ -124,7 +146,7 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
 
 const StWrapper = styled.div`
   position: absolute;

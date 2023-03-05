@@ -9,7 +9,7 @@ import { User, TextField as ITextField } from "types";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [_, setCookie] = useCookies(["Access-Token", "nameByEmail"]);
+  const [_, setCookie] = useCookies(["Access-Token", "nickName"]);
   const [user, setUser] = useState<User>({
     email: "",
     password: "",
@@ -34,9 +34,9 @@ const SignIn = () => {
   const { mutate } = useMutation(signin, {
     onSuccess: (response) => {
       if (response) {
-        setCookie("nameByEmail", user.email.split("@")[0]);
         setCookie("Access-Token", response?.headers.authorization.substr(7));
-        alert("회원가입 성공!");
+        setCookie("nickName", response?.data.nickname);
+        alert("로그인 성공!");
         navigate("/signin");
       }
     },

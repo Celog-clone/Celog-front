@@ -1,7 +1,7 @@
 import axios from "axios";
-import { User } from "types";
+import { NewUser, User } from "types";
 
-export const signup = async (newUser: User) => {
+export const signup = async (newUser: NewUser) => {
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_SERVER_URL}/api/members/signup`,
