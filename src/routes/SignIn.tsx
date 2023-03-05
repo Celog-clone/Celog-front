@@ -34,7 +34,7 @@ const SignIn = () => {
   const { mutate } = useMutation(signin, {
     onSuccess: (response) => {
       if (response) {
-        setCookie("nameByEmail", user.email);
+        setCookie("nameByEmail", user.email.split("@")[0]);
         setCookie("Access-Token", response?.headers.authorization.substr(7));
         alert("회원가입 성공!");
         navigate("/signin");
