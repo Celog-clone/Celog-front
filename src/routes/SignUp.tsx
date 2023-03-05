@@ -150,13 +150,14 @@ const StHeader = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: 10px;
   gap: 10px;
   color: white;
-
+  font-size: 1.5rem;
   width: 100%;
-  height: 30px;
-  background: #084bac;
+  height: 60px;
+  background: #63e6be;
   border-radius: 16px 16px 0px 0px;
 `;
 
