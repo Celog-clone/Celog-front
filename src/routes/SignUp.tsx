@@ -1,19 +1,24 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import styled from "styled-components";
 import { Button, TextField } from "@mui/material";
-import { signin } from "api";
-import { User, TextField as ITextField } from "types";
+import { signup } from "api";
+import { User } from "types";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [_, setCookie] = useCookies(["Access-Token", "nameByEmail"]);
+
   const [user, setUser] = useState<User>({
     email: "",
     password: "",
   });
+
+  interface ITextField {
+    label: string;
+    color: "primary" | "secondary" | "error" | "info" | "success" | "warning";
+    helperText: string;
+  }
 
   const [emailTextField, setEmailTextField] = useState<ITextField>({
     label: "Email",
@@ -31,11 +36,9 @@ const SignIn = () => {
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const pwReg = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
 
-  const { mutate } = useMutation(signin, {
+  const { mutate } = useMutation(signup, {
     onSuccess: (response) => {
       if (response) {
-        setCookie("nameByEmail", user.email);
-        setCookie("Access-Token", response?.headers.authorization.substr(7));
         alert("회원가입 성공!");
         navigate("/signin");
       }
@@ -90,7 +93,7 @@ const SignIn = () => {
   return (
     <StWrapper>
       <StContainer>
-        <StHeader>Sign In</StHeader>
+        <StHeader>Sign Up</StHeader>
         <StForm onSubmit={onSubmitHandler}>
           <StInputs>
             <TextField
@@ -112,7 +115,7 @@ const SignIn = () => {
               error={pwTextField.color === "error"}
             />
             <Button type="submit" variant="outlined" size="large">
-              로그인
+              회원가입
             </Button>
           </StInputs>
         </StForm>
