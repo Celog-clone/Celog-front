@@ -9,6 +9,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
   const [cookies] = useCookies(["Access-Token"]);
   const [comments, setComments] = useState("");
   const [updateComments, setUpdateComments] = useState("");
+  const [edit, setEdit] = useState(false);
 
   const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
     onSuccess: (response) => {
@@ -16,6 +17,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
     },
   });
 
+  //댓글 추가
   const { mutate: addCommentMutate } = useMutation(
     () => addComment(`${id}`, cookies["Access-Token"], comments),
     {
@@ -53,6 +55,11 @@ function Comment({ id, queryClient, detail, setDetail }) {
   };
 
   //댓글 수정
+  const onEditMode = () => {
+    setEdit(!edit);
+    setUpdateComments(detail.comments);
+  };
+
   const { mutate: updateCommentMutate } = useMutation(
     () => updateComment(`${id}`, cookies["Access-Token"], updateComments),
     {
@@ -66,6 +73,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
     event.preventDefault();
     updateCommentMutate();
     setUpdateComments("");
+    onEditMode();
     setDetail([...detail, updateComments]);
   };
 
@@ -100,17 +108,36 @@ function Comment({ id, queryClient, detail, setDetail }) {
                       </StData>
                     </StCommentTop>
                     <StBtns>
-                      <StChangeBtn onClick={onUpdateCommentHandler}>
-                        수정
-                      </StChangeBtn>
+                      <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
                       <StChangeBtn onClick={onDeleteCommentHandler}>
                         삭제
                       </StChangeBtn>
                     </StBtns>
                   </StCommentTopBox>
-                  <div>
-                    <StContent>{item.comments}</StContent>
-                  </div>
+                  {edit ? (
+                    // 수정 모드
+                    <div>
+                      <form onSubmit={onUpdateCommentHandler}>
+                        <input
+                          type="text"
+                          name="updateTitle"
+                          value={updateComments || ""}
+                          onChange={(event) => {
+                            setUpdateComments(event.target.value);
+                          }}
+                        />
+                        <StUpdateBtns>
+                          <StCancelBtn onClick={onEditMode}>취소</StCancelBtn>
+                          <StUpdateBtn>수정하기</StUpdateBtn>
+                        </StUpdateBtns>
+                      </form>
+                    </div>
+                  ) : (
+                    // 수정 전
+                    <div>
+                      <StContent>{item.comments}</StContent>
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -203,4 +230,47 @@ const StContent = styled.div`
   height: 60px;
   line-height: 60px;
   margin-top: 20px;
+`;
+
+const StUpdateBtns = styled.div`
+  display: flex;
+  margin-top: 10px;
+  float: right;
+  gap: 10px;
+`;
+
+const StCancelBtn = styled.button`
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  margin: auto 0;
+  height: 2.8rem;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 2.5rem;
+  padding-right: 20px;
+  padding-left: 20px;
+  &:hover {
+    background-color: #e9ecef;
+  }
+`;
+
+const StUpdateBtn = styled.button`
+  background-color: #12b886;
+  color: white;
+  border: none;
+  font-size: 18px;
+  font-weight: 800;
+  height: 2.8rem;
+  border-radius: 5px;
+  text-align: center;
+  line-height: 2.5rem;
+  padding-right: 20px;
+  padding-left: 20px;
+  cursor: pointer;
+  &:hover {
+    background-color: #20c997;
+  }
+  margin: auto 0;
 `;

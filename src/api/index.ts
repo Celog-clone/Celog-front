@@ -49,7 +49,11 @@ export const getPost = async () => {
   return response.data.response;
 };
 
-export const addPost = async (formData: FormData, accessToken: string) => {
+interface AddPostPayload {
+  accessToken: string;
+  formData: FormData;
+}
+export const addPost = async ({ accessToken, formData }: AddPostPayload) => {
   await instance
     .post("/api/posts", formData, {
       headers: {
@@ -189,10 +193,10 @@ export const updateComment = async (
       }
     )
     .then((response) => {
-      // if (response.data.success === true) {
-      console.log(response);
-      return response;
-      // }
+      if (response.data.success === true) {
+        console.log(response);
+        return response;
+      }
     })
     .catch((err) => {
       if (axios.isAxiosError(err)) {
