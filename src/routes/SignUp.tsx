@@ -15,8 +15,8 @@ const SignUp = () => {
     password: "",
   });
 
-  const [nickNameTextField, setNickNameTextField] = useState<ITextField>({
-    label: "Nickname",
+  const [nicknameTextField, setNicknameTextField] = useState<ITextField>({
+    label: "nickname",
     color: "info",
     helperText: "2~10자 이내의 닉네임을 입력해주세요.",
   });
@@ -32,13 +32,14 @@ const SignUp = () => {
       "숫자,문자,특수문자 포함 8~15자 이내의 비밀번호를 입력해주세요.",
   });
 
-  const nickNameReg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,10}$/;
+  const nicknameReg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]{2,10}$/;
   const emailReg =
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
   const pwReg = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;
 
   const { mutate } = useMutation(signup, {
     onSuccess: (response) => {
+      console.log(response);
       if (response) {
         alert("회원가입 성공!");
         navigate("/signin");
@@ -48,18 +49,19 @@ const SignUp = () => {
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === "nickName")
-      !nickNameReg.test(value)
-        ? setNickNameTextField({
-            ...nickNameTextField,
+    if (name === "nickname")
+      !nicknameReg.test(value)
+        ? setNicknameTextField({
+            ...nicknameTextField,
             color: "error",
             helperText: "2~10자 이내의 닉네임을 입력해주세요.",
           })
-        : setNickNameTextField({
-            ...nickNameTextField,
+        : setNicknameTextField({
+            ...nicknameTextField,
             color: "success",
             helperText: " ",
           });
+
     if (name === "email")
       !emailReg.test(value)
         ? setEmailTextField({
@@ -96,7 +98,11 @@ const SignUp = () => {
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (user.email.trim() === "" || user.password.trim() === "") {
+    if (
+      user.nickname.trim() === "" ||
+      user.email.trim() === "" ||
+      user.password.trim() === ""
+    ) {
       return alert("모든 항목을 입력해주세요.");
     }
 
@@ -112,11 +118,11 @@ const SignUp = () => {
             <TextField
               fullWidth
               onChange={onChangeHandler}
-              name="nickName"
-              label={nickNameTextField.label}
-              color={nickNameTextField.color}
-              helperText={nickNameTextField.helperText}
-              error={nickNameTextField.color === "error"}
+              name="nickname"
+              label={nicknameTextField.label}
+              color={nicknameTextField.color}
+              helperText={nicknameTextField.helperText}
+              error={nicknameTextField.color === "error"}
             />
             <TextField
               fullWidth

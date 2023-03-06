@@ -33,8 +33,8 @@ const data = [
 ];
 
 const MyPageCardList = () => {
-  const [cookies] = useCookies(["Access-Token", "nickName"]);
-  // const { data } = useQuery("getMyPosts", () => getMyPosts(cookies["nickName"],cookies["Access-Token"]));
+  const [cookies] = useCookies(["Access-Token", "nickname"]);
+  // const { data } = useQuery("getMyPosts", () => getMyPosts(cookies["nickname"],cookies["Access-Token"]));
 
   return (
     <StWrapper>

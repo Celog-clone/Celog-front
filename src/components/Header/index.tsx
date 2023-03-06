@@ -14,7 +14,7 @@ import { isLightState } from "store/atoms";
 
 const Header = () => {
   const navigate = useNavigate();
-  const [cookies, _, removeCookie] = useCookies(["Access-Token", "nickName"]);
+  const [cookies, _, removeCookie] = useCookies(["Access-Token", "nickname"]);
   const [isLight, setIsLight] = useRecoilState(isLightState);
   const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -25,12 +25,12 @@ const Header = () => {
     setAnchorEl(e.currentTarget);
   const handleClickMyPage = () => {
     setAnchorEl(null);
-    navigate(`/mypage/${cookies.nickName}`);
+    navigate(`/mypage/${cookies.nickname}`);
   };
   const handleClickLogOut = () => {
     setAnchorEl(null);
     removeCookie("Access-Token");
-    removeCookie("nickName");
+    removeCookie("nickname");
     navigate(`/signin`);
   };
 
@@ -51,9 +51,7 @@ const Header = () => {
         <IconButton onClick={handleClickMode}>
           {isLight ? <LightMode /> : <DarkMode />}
         </IconButton>
-        <StCreateBtn onClick={() => navigate("/create")}>
-          새 글 작성
-        </StCreateBtn>
+        <StCreateBtn onClick={() => navigate("/post")}>새 글 작성</StCreateBtn>
         <IconButton onClick={handleClickMyIcon}>
           <AccountCircle fontSize="large" />
         </IconButton>

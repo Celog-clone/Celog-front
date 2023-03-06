@@ -20,7 +20,7 @@ export interface WholeColor {
   bgColor: string;
 }
 
-export interface PostCard {
+export interface PostCardDetail {
   id: number;
   title: string;
   contents: string;
@@ -30,6 +30,18 @@ export interface PostCard {
   createAt: string;
   modifiedAt: string;
   commentList: Comment[];
+}
+
+export interface PostCard {
+  id: number;
+  title: string;
+  contents: string;
+  image: string;
+  nickname: string;
+  likeCount: number;
+  createAt: string;
+  modifiedAt: string;
+  commentsCount: number;
 }
 
 export interface Comment {

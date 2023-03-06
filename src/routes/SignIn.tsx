@@ -9,7 +9,7 @@ import { User, TextField as ITextField } from "types";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [_, setCookie] = useCookies(["Access-Token", "nickName"]);
+  const [_, setCookie] = useCookies(["Access-Token", "nickname"]);
   const [user, setUser] = useState<User>({
     email: "",
     password: "",
@@ -35,7 +35,7 @@ const SignIn = () => {
     onSuccess: (response) => {
       if (response) {
         setCookie("Access-Token", response?.headers.authorization.substr(7));
-        setCookie("nickName", response?.data.nickname);
+        setCookie("nickname", response?.data.nickname);
         alert("로그인 성공!");
         navigate("/signin");
       }
