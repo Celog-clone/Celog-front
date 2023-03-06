@@ -16,6 +16,7 @@ function Detail() {
 
   const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
     onSuccess: (response) => {
+      console.log(response.data.response);
       setDetail(response.data.response);
     },
   });
@@ -141,9 +142,10 @@ function Detail() {
               <StLine></StLine>
               <StImgBtn onClick={onImgButton}>이미지 업로드</StImgBtn>
               <div>
-                {imgView.map((item, index) => {
-                  return <StImg src={item} alt="img" key={index} />;
-                })}
+                {imgView &&
+                  imgView.map((item, index) => {
+                    return <StImg src={item} alt="img" key={index} />;
+                  })}
               </div>
               <input
                 type="file"
@@ -172,9 +174,10 @@ function Detail() {
           <StPostBox>
             <StViewTitle>{updateTitle}</StViewTitle>
             <StViewBox>
-              {imgView?.map((item, index) => {
-                return <StImg src={item} alt="img" key={index} />;
-              })}
+              {imgView &&
+                imgView?.map((item, index) => {
+                  return <StImg src={item} alt="img" key={index} />;
+                })}
             </StViewBox>
             <StViewContents>{updateContents}</StViewContents>
           </StPostBox>
@@ -186,22 +189,22 @@ function Detail() {
           {detail && (
             <>
               <StWrap>
-                <h1>{detail.title}타이틀</h1>
+                <h1>{detail.title}</h1>
                 <StTop>
                   <div>
-                    {detail.nickname}닉네임 날짜{detail.createAt}
+                    {detail.nickname} {detail.createAt}
                   </div>
                   <div>
                     <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
                     <StChangeBtn onClick={onDeleteHandler}>삭제</StChangeBtn>
                   </div>
                 </StTop>
-                <div>{detail.image}이미지</div>
-                <div style={{ height: "400px" }}>{detail.contents}텍스트</div>
+                <div>{detail.image}</div>
+                <div style={{ height: "400px" }}>{detail.contents}</div>
               </StWrap>
               <StHeartBox>
                 <StHeart onClick={onLikeHandler}>❤︎</StHeart>
-                <div>{detail.likeCount}11</div>
+                <div>{detail.likeCount}</div>
               </StHeartBox>
               <CommentList
                 id={id}
@@ -227,7 +230,7 @@ const StWrap = styled.div`
 
 const StHeartBox = styled.div`
   position: fixed;
-  top: 10%;
+  top: 20%;
   left: 15%;
   background-color: #e9ecef;
   width: 70px;

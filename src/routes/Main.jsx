@@ -26,6 +26,7 @@ function Main() {
                 onClick={() => {
                   navigate(`/${item.id}`);
                 }}
+                key={item.id}
               >
                 <StImg>이미지</StImg>
                 <StContents>
