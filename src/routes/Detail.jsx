@@ -16,7 +16,6 @@ function Detail() {
 
   const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
     onSuccess: (response) => {
-      console.log(response);
       setDetail(response.data.response);
     },
   });
@@ -58,7 +57,10 @@ function Detail() {
     }
   };
 
-  const onImgButton = () => fileInput?.current?.click();
+  const onImgButton = (event) => {
+    event.preventDefault();
+    fileInput?.current?.click();
+  };
 
   const onImgHandler = (event) => {
     const files = event.currentTarget.files;

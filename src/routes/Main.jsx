@@ -54,6 +54,7 @@ const StWrap = styled.div`
   padding: 20px 40px;
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
   overflow: hidden;
   margin: 0 auto;
 `;

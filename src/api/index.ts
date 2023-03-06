@@ -2,7 +2,7 @@ import axios from "axios";
 import { NewUser, User } from "types";
 
 const makeHeaders = (accessToken: string) => {
-  return { Authorization: `Bearer  ${accessToken}` };
+  return { Authorization: `Bearer ${accessToken}` };
 };
 
 export const instance = axios.create({
@@ -153,7 +153,7 @@ export const addComment = async (
 
 export const deleteComment = async (id: string, accessToken: string) => {
   await instance
-    .delete(`/api/comments/${id}`, {
+    .delete(`/api/posts/${id}/comments/${id}`, {
       headers: {
         ...makeHeaders(accessToken),
       },
@@ -178,7 +178,7 @@ export const updateComment = async (
 ) => {
   await instance
     .put(
-      `/api/comments/${id}`,
+      `/api/posts/${id}/comments/${id}`,
       {
         comments: updateComments,
       },
@@ -214,10 +214,10 @@ export const postLike = async (id: any, accessToken: string) => {
       },
     })
     .then((response) => {
-      // if (response.data.success === true) {
-      console.log(response);
-      return response;
-      // }
+      if (response.data.success === true) {
+        console.log(response);
+        return response;
+      }
     })
     .catch((err) => {
       if (axios.isAxiosError(err)) {

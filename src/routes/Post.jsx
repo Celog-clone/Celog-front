@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { addPost } from "api";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import { useCookies } from "react-cookie";
 
 function Post() {
   //데이터 조회
+  const [cookies] = useCookies(["Access-Token"]);
   const queryClient = useQueryClient();
   const addMutation = useMutation(addPost, {
     onSuccess: () => {
@@ -30,7 +32,7 @@ function Post() {
     formData.append("title", title);
     formData.append("contents", contents);
     formData.append("image", image);
-    addMutation.mutate(formData);
+    addMutation.mutate(formData, cookies["Access-Token"]);
     alert("작성완료!");
     navigate("/");
   };

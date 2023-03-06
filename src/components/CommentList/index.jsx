@@ -12,7 +12,6 @@ function Comment({ id, queryClient, detail, setDetail }) {
 
   const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
     onSuccess: (response) => {
-      console.log(response);
       setDetail(response.data.response.commentList.reverse());
     },
   });
@@ -96,10 +95,8 @@ function Comment({ id, queryClient, detail, setDetail }) {
                     <StCommentTop>
                       <FaUserCircle style={{ fontSize: "50px" }} />
                       <StData>
-                        <div style={{ fontWeight: "600" }}>
-                          {item.nickname}유저네임
-                        </div>
-                        <div style={{ color: "gray" }}>{item.createAt}시간</div>
+                        <div style={{ fontWeight: "600" }}>{item.nickname}</div>
+                        <div style={{ color: "gray" }}>{item.createAt}</div>
                       </StData>
                     </StCommentTop>
                     <StBtns>
