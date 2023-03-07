@@ -180,11 +180,11 @@ function Detail() {
           {detail && (
             <>
               <StWrap>
-                <h1>{detail.title}</h1>
+                <StTitle>{detail.title}</StTitle>
                 <StTop>
-                  <div>
-                    {detail.nickname} {detail.createdAt}
-                  </div>
+                  <StDate>
+                    {detail.nickname} · {detail.createdAt}
+                  </StDate>
                   {detail.nickname === cookies.nickname && (
                     <div>
                       <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
@@ -192,7 +192,7 @@ function Detail() {
                     </div>
                   )}
                 </StTop>
-                <img src={detail.image} alt="img" />
+                <StOriginImg src={detail.image} alt="img" />
                 <div style={{ height: "400px" }}>{detail.contents}</div>
               </StWrap>
               <StHeartBox>
@@ -221,6 +221,12 @@ const StWrap = styled.div`
   padding: 20px;
 `;
 
+const StTitle = styled.div`
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 30px;
+`;
+
 const StHeartBox = styled.div`
   position: fixed;
   top: 20%;
@@ -242,6 +248,7 @@ const StHeart = styled.div`
   color: #969896;
   margin: 0 auto;
   margin-top: 10px;
+  margin-bottom: 5px;
   background-color: white;
   cursor: pointer;
   &:hover {
@@ -253,6 +260,15 @@ const StHeart = styled.div`
 const StTop = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const StDate = styled.div`
+  color: gray;
+`;
+
+const StOriginImg = styled.img`
+  margin: 20px 0;
+  width: 750px;
 `;
 
 const StChangeBtn = styled.button`

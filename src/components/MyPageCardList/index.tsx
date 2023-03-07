@@ -11,7 +11,6 @@ const MyPageCardList = () => {
   const { data } = useQuery("getMyPosts", () =>
     getMyPosts(cookies["Access-Token"])
   );
-  console.log(data);
 
   return (
     <StWrapper>
