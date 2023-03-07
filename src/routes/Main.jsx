@@ -79,8 +79,8 @@ function Main() {
               >
                 <StImg src={item.image} alt="img" />
                 <StContents>
-                  <div>{item.title}</div>
-                  <div>{item.contents}</div>
+                  <StTitle>{item.title}</StTitle>
+                  <StText>{item.contents}</StText>
                 </StContents>
                 <StDate>
                   {item.createdAt} · {item.commentsCount}개의 댓글
@@ -136,9 +136,20 @@ const StImg = styled.img`
 
 const StContents = styled.div`
   height: 100px;
-  padding: 0px 10px;
+  padding: 0px 15px;
   margin-bottom: 20px;
 `;
+
+const StTitle = styled.div`
+  font-weight: 600;
+  margin-bottom: 10px;
+`;
+
+const StText = styled.div`
+  font-size: 14px;
+  color: gray;
+`;
+
 const StDate = styled.div`
   height: 30px;
   padding: 0px 10px;
