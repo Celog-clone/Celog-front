@@ -95,7 +95,7 @@ function Detail() {
     const payload = {
       title: formData.get("title"),
       contents: formData.get("contents"),
-      image: formData.get("file"),
+      image: formData.get("image"),
     };
 
     updatePostMutate({

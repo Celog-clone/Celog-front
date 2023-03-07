@@ -53,7 +53,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
     },
   });
 
-  const onUpdateCommentHandler = (event) => {
+  const onUpdateCommentHandler = (event, id) => {
     event.preventDefault();
     updateCommentMutate({
       id,
