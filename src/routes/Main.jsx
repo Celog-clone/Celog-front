@@ -29,7 +29,6 @@ function Main() {
                 key={item.id}
               >
                 <StImg src={item.image} alt="img" />
-                {item.image}
                 <StContents>
                   <div>{item.title}</div>
                   <div>{item.contents}</div>

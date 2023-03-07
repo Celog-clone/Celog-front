@@ -39,7 +39,7 @@ export interface PostCard {
   image: string;
   nickname: string;
   likeCount: number;
-  createAt: string;
+  createdAt: string;
   modifiedAt: string;
   commentsCount: number;
 }
@@ -66,6 +66,16 @@ export interface UpdatePostArgs extends PostArgs {
   formData: FormData;
 }
 
+export interface DelCommentArgs {
+  postId: string;
+  commentId: string;
+  accessToken: string;
+}
+
 export interface AddCommentArgs extends PostArgs {
+  comments: string;
+}
+
+export interface UpdateCommentArgs extends DelCommentArgs {
   comments: string;
 }

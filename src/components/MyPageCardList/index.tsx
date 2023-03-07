@@ -4,39 +4,14 @@ import styled from "styled-components";
 import { Divider, Stack } from "@mui/material";
 import { Favorite } from "@mui/icons-material";
 import { getMyPosts } from "api";
-
-const data2 = [
-  {
-    id: 1,
-    title: "title",
-    content: "content",
-    nickname: "nickname",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/3/36/Hopetoun_falls.jpg",
-    createAt: "2023-03-06",
-    modifiedAt: "2023-03-06",
-    commentListCnt: 3,
-    likeCnt: 5,
-  },
-  {
-    id: 2,
-    title: "title2",
-    content: "content2",
-    nickname: "nickname2",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/3/36/Hopetoun_falls.jpg",
-    createAt: "2023-03-06",
-    modifiedAt: "2023-03-06",
-    commentListCnt: 3,
-    likeCnt: 5,
-  },
-];
+import { PostCard } from "types";
 
 const MyPageCardList = () => {
   const [cookies] = useCookies(["Access-Token"]);
   const { data } = useQuery("getMyPosts", () =>
     getMyPosts(cookies["Access-Token"])
   );
+  console.log(data);
 
   return (
     <StWrapper>
@@ -47,11 +22,11 @@ const MyPageCardList = () => {
         alignItems="center"
         justifyContent="center"
       >
-        {data2.map((post) => (
+        {data?.data.response.map((post: PostCard) => (
           <StPostCardBox key={post.id}>
             <StPostCardImg src={post.image} />
             <StPostCardTitle>{post.title}</StPostCardTitle>
-            <StPostCardContent>{post.content}</StPostCardContent>
+            <StPostCardContent>{post.contents}</StPostCardContent>
             <StPostCardFooter
               direction="row"
               spacing={1}
@@ -59,10 +34,10 @@ const MyPageCardList = () => {
               alignItems="center"
             >
               <div>{post.modifiedAt}</div>
-              <div>{post.commentListCnt}개의 댓글</div>
+              <div>{post.commentsCount}개의 댓글</div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Favorite fontSize="small" color="error" />
-                {post.likeCnt}
+                {post.likeCount}
               </div>
             </StPostCardFooter>
           </StPostCardBox>

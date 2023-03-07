@@ -2,8 +2,10 @@ import axios from "axios";
 import {
   AddCommentArgs,
   AddPostArgs,
+  DelCommentArgs,
   NewUser,
   PostArgs,
+  UpdateCommentArgs,
   UpdatePostArgs,
   User,
 } from "types";
@@ -162,9 +164,15 @@ export const addComment = async ({
     });
 };
 
-export const deleteComment = async ({ id, accessToken }: PostArgs) => {
+export const deleteComment = async ({
+  postId,
+  commentId,
+  accessToken,
+}: DelCommentArgs) => {
   await instance
-    .delete(`/api/comments/${id}`, { headers: makeHeaders(accessToken) })
+    .delete(`/api/posts/${postId}/comments/${commentId}`, {
+      headers: makeHeaders(accessToken),
+    })
     .then((response) => {
       return response;
     })
@@ -176,13 +184,14 @@ export const deleteComment = async ({ id, accessToken }: PostArgs) => {
 };
 
 export const updateComment = async ({
-  id,
+  postId,
+  commentId,
   accessToken,
   comments,
-}: AddCommentArgs) => {
+}: UpdateCommentArgs) => {
   await instance
     .put(
-      `/api/posts/${id}/comments/${id}`,
+      `/api/posts/${postId}/comments/${commentId}`,
       {
         comments,
       },
@@ -212,23 +221,23 @@ export const postLike = async ({ id, accessToken }: PostArgs) => {
 };
 
 export const PostApi = {
-  getPost,
-  getPosts,
-  getMyPosts,
+  getPost, //OK
+  getPosts, //OK
+  getMyPosts, //OK
   searchPost,
-  addPost,
-  deletePost,
-  updatePost,
-  postLike,
+  addPost, //OK
+  deletePost, //OK
+  updatePost, //OK
+  postLike, //OK
 };
 
 export const CommentApi = {
-  addComment,
+  addComment, //OK
   updateComment,
-  deleteComment,
+  deleteComment, //OK
 };
 
 export const AuthApi = {
-  signup,
-  signin,
+  signup, //OK
+  signin, //OK
 };

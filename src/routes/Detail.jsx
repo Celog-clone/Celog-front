@@ -56,33 +56,30 @@ function Detail() {
 
   const onImgButton = (event) => {
     event.preventDefault();
-    fileInput?.current?.click();
+    fileInput.current.click();
   };
 
   const onImgHandler = (event) => {
-    event.preventDefault();
-    const files = event.currentTarget.files;
     setImgView([]);
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        if (files[i]) {
-          setImage(`${files[i]}`);
-          let reader = new FileReader();
-          reader.readAsDataURL(files[i]);
-          reader.onloadend = () => {
-            const base = reader.result;
-            if (base) {
-              const baseSub = base.toString();
-              setImgView((imgView) => [...imgView, baseSub]);
-            }
-          };
-        }
+    for (let i = 0; i < event.target.files.length; i++) {
+      if (event.target.files[i]) {
+        setImage(event.target.files[i]);
+        let reader = new FileReader();
+        reader.readAsDataURL(event.target.files[i]);
+        reader.onloadend = () => {
+          const base = reader.result;
+          if (base) {
+            const baseSub = base.toString();
+            setImgView((imgView) => [...imgView, baseSub]);
+          }
+        };
       }
     }
   };
+
   const { mutate: updatePostMutate } = useMutation(updatePost, {
     onSuccess: () => {
-      queryClient.invalidateQueries("getPosts");
+      queryClient.invalidateQueries("getPost");
     },
   });
   const onUpdateHandler = (event) => {
@@ -92,16 +89,10 @@ function Detail() {
     formData.append("contents", updateContents);
     formData.append("image", image);
 
-    const payload = {
-      title: formData.get("title"),
-      contents: formData.get("contents"),
-      image: formData.get("file"),
-    };
-
     updatePostMutate({
       id,
       accessToken: cookies["Access-Token"],
-      formData: payload,
+      formData,
     });
 
     setUpdateTitle("");
@@ -133,7 +124,7 @@ function Detail() {
               <StTitleInput
                 type="text"
                 name="title"
-                value={updateTitle || ""}
+                value={updateTitle}
                 onChange={(event) => {
                   setUpdateTitle(event.target.value);
                 }}
@@ -141,7 +132,7 @@ function Detail() {
               <StLine />
               <StImgBtn onClick={onImgButton}>이미지 업로드</StImgBtn>
               <div>
-                {imgView &&
+                {imgView.length > 0 &&
                   imgView.map((item, index) => {
                     return <StImg src={item} alt="img" key={index} />;
                   })}
@@ -155,8 +146,9 @@ function Detail() {
                 onChange={onImgHandler}
               />
               <StContentInput
+                type="text"
                 name="title"
-                value={updateContents || ""}
+                value={updateContents}
                 onChange={(event) => {
                   setUpdateContents(event.target.value);
                 }}
@@ -173,8 +165,8 @@ function Detail() {
           <StPostBox>
             <StViewTitle>{updateTitle}</StViewTitle>
             <StViewBox>
-              {imgView &&
-                imgView?.map((item, index) => {
+              {imgView.length > 0 &&
+                imgView.map((item, index) => {
                   return <StImg src={item} alt="img" key={index} />;
                 })}
             </StViewBox>

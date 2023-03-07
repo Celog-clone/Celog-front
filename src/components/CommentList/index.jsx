@@ -31,10 +31,14 @@ function Comment({ id, queryClient, detail, setDetail }) {
     },
   });
 
-  const onDeleteCommentHandler = (id) => {
+  const onDeleteCommentHandler = (commentId) => {
     const message = window.confirm("댓글을 삭제하시겠습니까?");
     if (message) {
-      delCommentMutate({ id, accessToken: cookies["Access-Token"] });
+      delCommentMutate({
+        postId: id,
+        commentId,
+        accessToken: cookies["Access-Token"],
+      });
       setDetail([...detail]);
     } else {
       return;
@@ -42,7 +46,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
   };
 
   //댓글 수정
-  const onEditMode = () => {
+  const onEditMode = (commentId) => {
     setEdit(!edit);
     setUpdateComments(detail.comments);
   };
@@ -53,10 +57,11 @@ function Comment({ id, queryClient, detail, setDetail }) {
     },
   });
 
-  const onUpdateCommentHandler = (event) => {
+  const onUpdateCommentHandler = (event, commentId) => {
     event.preventDefault();
     updateCommentMutate({
-      id,
+      postId: id,
+      commentId,
       accessToken: cookies["Access-Token"],
       comments: updateComments,
     });
@@ -68,7 +73,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
     <>
       <StWrap>
         <StCommentAddBox>
-          <div>댓글 0개</div>
+          <div>댓글 {detail.commentList.length}개</div>
           <form onSubmit={onSubmitHandler}>
             <StInput
               type="text"
@@ -82,52 +87,57 @@ function Comment({ id, queryClient, detail, setDetail }) {
           </form>
         </StCommentAddBox>
         <StNewCommentBox>
-          {detail.length > 0 &&
-            detail.map((item) => {
-              return (
-                <div>
-                  <StCommentTopBox>
-                    <StCommentTop>
-                      <FaUserCircle style={{ fontSize: "50px" }} />
-                      <StData>
-                        <div style={{ fontWeight: "600" }}>{item.nickname}</div>
-                        <div style={{ color: "gray" }}>{item.createAt}</div>
-                      </StData>
-                    </StCommentTop>
-                    <StBtns>
-                      <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
-                      <StChangeBtn onClick={onDeleteCommentHandler}>
-                        삭제
-                      </StChangeBtn>
-                    </StBtns>
-                  </StCommentTopBox>
-                  {edit ? (
-                    // 수정 모드
-                    <div>
-                      <form onSubmit={onUpdateCommentHandler}>
-                        <input
-                          type="text"
-                          name="updateTitle"
-                          value={updateComments || ""}
-                          onChange={(event) => {
-                            setUpdateComments(event.target.value);
-                          }}
-                        />
-                        <StUpdateBtns>
-                          <StCancelBtn onClick={onEditMode}>취소</StCancelBtn>
-                          <StUpdateBtn>수정하기</StUpdateBtn>
-                        </StUpdateBtns>
-                      </form>
-                    </div>
-                  ) : (
-                    // 수정 전
-                    <div>
-                      <StContent>{item.comments}</StContent>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+          {detail?.commentList?.map((item) => {
+            return (
+              <div>
+                <StCommentTopBox>
+                  <StCommentTop>
+                    <FaUserCircle style={{ fontSize: "50px" }} />
+                    <StData>
+                      <div style={{ fontWeight: "600" }}>{item.nickname}</div>
+                      <div style={{ color: "gray" }}>{item.createAt}</div>
+                    </StData>
+                  </StCommentTop>
+                  <StBtns>
+                    <StChangeBtn onClick={() => onEditMode(item.id)}>
+                      수정
+                    </StChangeBtn>
+                    <StChangeBtn
+                      onClick={() => onDeleteCommentHandler(item.id)}
+                    >
+                      삭제
+                    </StChangeBtn>
+                  </StBtns>
+                </StCommentTopBox>
+                {edit ? (
+                  // 수정 모드
+                  <div>
+                    <form onSubmit={(e) => onUpdateCommentHandler(e, item.id)}>
+                      <input
+                        type="text"
+                        name="updateTitle"
+                        value={updateComments}
+                        onChange={(event) => {
+                          setUpdateComments(event.target.value);
+                        }}
+                      />
+                      <StUpdateBtns>
+                        <StCancelBtn onClick={() => onEditMode(item.id)}>
+                          취소
+                        </StCancelBtn>
+                        <StUpdateBtn>수정하기</StUpdateBtn>
+                      </StUpdateBtns>
+                    </form>
+                  </div>
+                ) : (
+                  // 수정 전
+                  <div>
+                    <StContent>{item.comments}</StContent>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </StNewCommentBox>
       </StWrap>
     </>
