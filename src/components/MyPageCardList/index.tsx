@@ -1,13 +1,14 @@
 import { useQuery } from "react-query";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Divider, Stack } from "@mui/material";
-import { Favorite } from "@mui/icons-material";
 import { getMyPosts } from "api";
 import { PostCard } from "types";
 
 const MyPageCardList = () => {
   const [cookies] = useCookies(["Access-Token"]);
+  const navigate = useNavigate();
   const { data } = useQuery("getMyPosts", () =>
     getMyPosts(cookies["Access-Token"])
   );
@@ -22,7 +23,7 @@ const MyPageCardList = () => {
         justifyContent="center"
       >
         {data?.data.response.map((post: PostCard) => (
-          <StPostCardBox key={post.id}>
+          <StPostCardBox key={post.id} onClick={() => navigate(`/${post.id}`)}>
             <StPostCardImg src={post.image} />
             <StPostCardTitle>{post.title}</StPostCardTitle>
             <StPostCardContent>{post.contents}</StPostCardContent>
@@ -34,9 +35,11 @@ const MyPageCardList = () => {
             >
               <div>{post.modifiedAt}</div>
               <div>{post.commentsCount}개의 댓글</div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <Favorite fontSize="small" color="error" />
-                {post.likeCount}
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "3px" }}
+              >
+                <div>❤︎</div>
+                <div>{post.likeCount}</div>
               </div>
             </StPostCardFooter>
           </StPostCardBox>
@@ -51,7 +54,7 @@ export default MyPageCardList;
 const StWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 200px;
+  padding: 100px 0px;
 `;
 
 const StContainer = styled(Stack)`
@@ -65,6 +68,11 @@ const StPostCardBox = styled.div`
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+  &:hover {
+    transform: translateY(-8px);
+    transition: ease-in 0s, transform 0.25s ease-in 0s;
+    cursor: pointer;
+  }
 `;
 
 const StPostCardImg = styled.img`
