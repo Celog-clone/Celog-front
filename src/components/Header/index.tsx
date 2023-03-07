@@ -36,7 +36,7 @@ const Header = () => {
 
   return (
     <StContainer>
-      <StLogo to="">Celog</StLogo>
+      <StLogo to="/">Celog</StLogo>
       <StToolbar direction="row" spacing={0.2} alignItems="center">
         <div>
           <StSearchInput
@@ -103,7 +103,7 @@ const StCreateBtn = styled.button`
   transition-duration: 0.2s;
   color: black;
   background-color: white;
-
+  cursor: pointer;
   &:hover {
     color: white;
     background-color: black;

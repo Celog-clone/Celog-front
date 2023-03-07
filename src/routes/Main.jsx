@@ -26,13 +26,15 @@ function Main() {
                 onClick={() => {
                   navigate(`/${item.id}`);
                 }}
+                key={item.id}
               >
-                <StImg>이미지</StImg>
+                <StImg src={item.image} alt="img" />
+                {item.image}
                 <StContents>
                   <div>{item.title}</div>
                   <div>{item.contents}</div>
                 </StContents>
-                <StDate>{item.createAt}</StDate>
+                <StDate>{item.createdAt}</StDate>
                 <StFooter>
                   <div>{item.nickname}</div>
                   <StLikeBox>
@@ -54,6 +56,7 @@ const StWrap = styled.div`
   padding: 20px 40px;
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
   overflow: hidden;
   margin: 0 auto;
 `;
@@ -72,7 +75,7 @@ const StCard = styled.div`
   }
 `;
 
-const StImg = styled.div`
+const StImg = styled.img`
   height: 130px;
   background-color: lightgray;
   margin-bottom: 10px;

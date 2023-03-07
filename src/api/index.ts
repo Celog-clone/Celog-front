@@ -2,7 +2,7 @@ import axios from "axios";
 import { NewUser, User } from "types";
 
 const makeHeaders = (accessToken: string) => {
-  return { Authorization: `Bearer  ${accessToken}` };
+  return { Authorization: `Bearer ${accessToken}` };
 };
 
 export const instance = axios.create({
@@ -49,7 +49,11 @@ export const getPost = async () => {
   return response.data.response;
 };
 
-export const addPost = async (formData: FormData, accessToken: string) => {
+interface AddPostPayload {
+  accessToken: string;
+  formData: FormData;
+}
+export const addPost = async ({ accessToken, formData }: AddPostPayload) => {
   await instance
     .post("/api/posts", formData, {
       headers: {
@@ -130,8 +134,8 @@ export const addComment = async (
 ) => {
   await instance
     .post(
-      `/api/posts/${id}/comments`,
-      { comments },
+      `/api/posts/${id.id}/comments`,
+      { comments: id.comments },
       {
         headers: {
           ...makeHeaders(accessToken),
@@ -139,10 +143,10 @@ export const addComment = async (
       }
     )
     .then((response) => {
-      // if (response.data.success === true) {
-      console.log(response);
-      return response;
-      // }
+      if (response.data.success === true) {
+        console.log(response);
+        return response;
+      }
     })
     .catch((err) => {
       if (axios.isAxiosError(err)) {
@@ -153,7 +157,7 @@ export const addComment = async (
 
 export const deleteComment = async (id: string, accessToken: string) => {
   await instance
-    .delete(`/api/comments/${id}`, {
+    .delete(`/api/posts/${id}/comments/${id}`, {
       headers: {
         ...makeHeaders(accessToken),
       },
@@ -178,7 +182,7 @@ export const updateComment = async (
 ) => {
   await instance
     .put(
-      `/api/comments/${id}`,
+      `/api/posts/${id}/comments/${id}`,
       {
         comments: updateComments,
       },
@@ -189,10 +193,10 @@ export const updateComment = async (
       }
     )
     .then((response) => {
-      // if (response.data.success === true) {
-      console.log(response);
-      return response;
-      // }
+      if (response.data.success === true) {
+        console.log(response);
+        return response;
+      }
     })
     .catch((err) => {
       if (axios.isAxiosError(err)) {
@@ -206,18 +210,18 @@ export const getDetail = async (id: string) => {
   return data;
 };
 
-export const postLike = async (id: any, accessToken: string) => {
+interface PostArgs {
+  id: string;
+  accessToken: string;
+}
+export const postLike = async ({ id, accessToken }: PostArgs) => {
   await instance
-    .post(`/api/posts/${id}/comments`, {
-      headers: {
-        ...makeHeaders(accessToken),
-      },
-    })
+    .post(`/api/posts/${id}/like`, {}, { headers: makeHeaders(accessToken) })
     .then((response) => {
-      // if (response.data.success === true) {
-      console.log(response);
-      return response;
-      // }
+      if (response.data.success === true) {
+        console.log(response);
+        return response;
+      }
     })
     .catch((err) => {
       if (axios.isAxiosError(err)) {

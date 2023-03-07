@@ -37,7 +37,7 @@ const SignIn = () => {
         setCookie("Access-Token", response?.headers.authorization.substr(7));
         setCookie("nickname", response?.data.nickname);
         alert("로그인 성공!");
-        navigate("/signin");
+        navigate("/");
       }
     },
   });

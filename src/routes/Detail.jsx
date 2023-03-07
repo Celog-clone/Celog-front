@@ -6,20 +6,22 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import styled from "styled-components";
 import { deletePost, updatePost, getDetail, postLike } from "api";
 import { CommentList, Header } from "components";
+import { instance } from "api";
 
 function Detail() {
   const { id } = useParams();
-  const [cookies] = useCookies(["Access-Token"]);
+  const [cookies] = useCookies(["Access-Token", "nickname"]);
   const [detail, setDetail] = useState();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
     onSuccess: (response) => {
-      console.log(response);
+      console.log(response.data.response);
       setDetail(response.data.response);
     },
   });
+  console.log(data);
 
   //상세페이지 삭제
   const { mutate: delPostMutate } = useMutation(
@@ -58,7 +60,10 @@ function Detail() {
     }
   };
 
-  const onImgButton = () => fileInput?.current?.click();
+  const onImgButton = (event) => {
+    event.preventDefault();
+    fileInput?.current?.click();
+  };
 
   const onImgHandler = (event) => {
     const files = event.currentTarget.files;
@@ -98,7 +103,7 @@ function Detail() {
     const payload = {
       title: formData.get("title"),
       contents: formData.get("contents"),
-      image: formData.get("image"),
+      image: formData.get("file"),
     };
 
     updatePostMutate(payload);
@@ -112,13 +117,14 @@ function Detail() {
   };
 
   //좋아요
-  const [likeNum, setLikeNum] = useState(0);
-  const { mutate: postLikeMutate } = useMutation(() =>
-    postLike(`${id}`, cookies["Access-Token"])
-  );
+  const { mutate: postLikeMutate } = useMutation(postLike, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("getDetail");
+    },
+  });
+
   const onLikeHandler = () => {
-    postLikeMutate();
-    setLikeNum(likeNum);
+    postLikeMutate({ id, accessToken: cookies["Access-Token"] });
   };
 
   return (
@@ -139,9 +145,10 @@ function Detail() {
               <StLine></StLine>
               <StImgBtn onClick={onImgButton}>이미지 업로드</StImgBtn>
               <div>
-                {imgView.map((item, index) => {
-                  return <StImg src={item} alt="img" key={index} />;
-                })}
+                {imgView &&
+                  imgView.map((item, index) => {
+                    return <StImg src={item} alt="img" key={index} />;
+                  })}
               </div>
               <input
                 type="file"
@@ -170,9 +177,10 @@ function Detail() {
           <StPostBox>
             <StViewTitle>{updateTitle}</StViewTitle>
             <StViewBox>
-              {imgView?.map((item, index) => {
-                return <StImg src={item} alt="img" key={index} />;
-              })}
+              {imgView &&
+                imgView?.map((item, index) => {
+                  return <StImg src={item} alt="img" key={index} />;
+                })}
             </StViewBox>
             <StViewContents>{updateContents}</StViewContents>
           </StPostBox>
@@ -184,28 +192,30 @@ function Detail() {
           {detail && (
             <>
               <StWrap>
-                <h1>{detail.title}타이틀</h1>
+                <h1>{detail.title}</h1>
                 <StTop>
                   <div>
-                    {detail.nickname}닉네임 날짜{detail.createAt}
+                    {detail.nickname} {detail.createdAt}
                   </div>
-                  <div>
-                    <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
-                    <StChangeBtn onClick={onDeleteHandler}>삭제</StChangeBtn>
-                  </div>
+                  {detail.nickname === cookies.nickname && (
+                    <div>
+                      <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
+                      <StChangeBtn onClick={onDeleteHandler}>삭제</StChangeBtn>
+                    </div>
+                  )}
                 </StTop>
-                <div>{detail.image}이미지</div>
-                <div style={{ height: "400px" }}>{detail.contents}텍스트</div>
+                <img src={detail.image} alt="img" />
+                <div style={{ height: "400px" }}>{detail.contents}</div>
               </StWrap>
               <StHeartBox>
                 <StHeart onClick={onLikeHandler}>❤︎</StHeart>
-                <div>{detail.likeCount}11</div>
+                <div>{detail.likeCount}</div>
               </StHeartBox>
               <CommentList
-                id={id}
-                queryClient={queryClient}
-                detail={detail}
-                setDetail={setDetail}
+              // id={id}
+              // queryClient={queryClient}
+              // detail={detail}
+              // setDetail={setDetail}
               />
             </>
           )}
@@ -225,7 +235,7 @@ const StWrap = styled.div`
 
 const StHeartBox = styled.div`
   position: fixed;
-  top: 10%;
+  top: 20%;
   left: 15%;
   background-color: #e9ecef;
   width: 70px;

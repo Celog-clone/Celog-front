@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { addPost } from "api";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import { useCookies } from "react-cookie";
 
 function Post() {
   //데이터 조회
+  const [cookies] = useCookies(["Access-Token"]);
   const queryClient = useQueryClient();
-  const addMutation = useMutation(addPost, {
+  const addPostMutation = useMutation(addPost, {
     onSuccess: () => {
       queryClient.invalidateQueries("getPost");
     },
@@ -29,8 +31,8 @@ function Post() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("contents", contents);
-    formData.append("image", image);
-    addMutation.mutate(formData);
+    formData.append("file", image);
+    addPostMutation.mutate({ accessToken: cookies["Access-Token"], formData });
     alert("작성완료!");
     navigate("/");
   };
