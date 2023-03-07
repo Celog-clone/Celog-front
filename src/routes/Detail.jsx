@@ -256,6 +256,7 @@ const StHeart = styled.div`
   color: #969896;
   margin: 0 auto;
   margin-top: 10px;
+  margin-bottom: 5px;
   background-color: white;
   cursor: pointer;
   &:hover {
