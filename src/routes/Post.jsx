@@ -31,7 +31,7 @@ function Post() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("contents", contents);
-    formData.append("image", image);
+    formData.append("file", image);
     addPostMutation.mutate({ accessToken: cookies["Access-Token"], formData });
     alert("작성완료!");
     navigate("/");

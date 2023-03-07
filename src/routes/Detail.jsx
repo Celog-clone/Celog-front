@@ -6,10 +6,11 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import styled from "styled-components";
 import { deletePost, updatePost, getDetail, postLike } from "api";
 import { CommentList, Header } from "components";
+import { instance } from "api";
 
 function Detail() {
   const { id } = useParams();
-  const [cookies] = useCookies(["Access-Token"]);
+  const [cookies] = useCookies(["Access-Token", "nickname"]);
   const [detail, setDetail] = useState();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ function Detail() {
       setDetail(response.data.response);
     },
   });
+  console.log(data);
 
   //상세페이지 삭제
   const { mutate: delPostMutate } = useMutation(
@@ -101,7 +103,7 @@ function Detail() {
     const payload = {
       title: formData.get("title"),
       contents: formData.get("contents"),
-      image: formData.get("image"),
+      image: formData.get("file"),
     };
 
     updatePostMutate(payload);
@@ -115,13 +117,14 @@ function Detail() {
   };
 
   //좋아요
-  const [likeNum, setLikeNum] = useState(0);
-  const { mutate: postLikeMutate } = useMutation(() =>
-    postLike(`${id}`, cookies["Access-Token"])
-  );
+  const { mutate: postLikeMutate } = useMutation(postLike, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("getDetail");
+    },
+  });
+
   const onLikeHandler = () => {
-    postLikeMutate();
-    setLikeNum(likeNum);
+    postLikeMutate({ id, accessToken: cookies["Access-Token"] });
   };
 
   return (
@@ -192,14 +195,16 @@ function Detail() {
                 <h1>{detail.title}</h1>
                 <StTop>
                   <div>
-                    {detail.nickname} {detail.createAt}
+                    {detail.nickname} {detail.createdAt}
                   </div>
-                  <div>
-                    <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
-                    <StChangeBtn onClick={onDeleteHandler}>삭제</StChangeBtn>
-                  </div>
+                  {detail.nickname === cookies.nickname && (
+                    <div>
+                      <StChangeBtn onClick={onEditMode}>수정</StChangeBtn>
+                      <StChangeBtn onClick={onDeleteHandler}>삭제</StChangeBtn>
+                    </div>
+                  )}
                 </StTop>
-                <div>{detail.image}</div>
+                <img src={detail.image} alt="img" />
                 <div style={{ height: "400px" }}>{detail.contents}</div>
               </StWrap>
               <StHeartBox>
@@ -207,10 +212,10 @@ function Detail() {
                 <div>{detail.likeCount}</div>
               </StHeartBox>
               <CommentList
-                id={id}
-                queryClient={queryClient}
-                detail={detail}
-                setDetail={setDetail}
+              // id={id}
+              // queryClient={queryClient}
+              // detail={detail}
+              // setDetail={setDetail}
               />
             </>
           )}

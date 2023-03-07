@@ -134,8 +134,8 @@ export const addComment = async (
 ) => {
   await instance
     .post(
-      `/api/posts/${id}/comments`,
-      { comments },
+      `/api/posts/${id.id}/comments`,
+      { comments: id.comments },
       {
         headers: {
           ...makeHeaders(accessToken),
@@ -143,10 +143,10 @@ export const addComment = async (
       }
     )
     .then((response) => {
-      // if (response.data.success === true) {
-      console.log(response);
-      return response;
-      // }
+      if (response.data.success === true) {
+        console.log(response);
+        return response;
+      }
     })
     .catch((err) => {
       if (axios.isAxiosError(err)) {
@@ -210,13 +210,13 @@ export const getDetail = async (id: string) => {
   return data;
 };
 
-export const postLike = async (id: any, accessToken: string) => {
+interface PostArgs {
+  id: string;
+  accessToken: string;
+}
+export const postLike = async ({ id, accessToken }: PostArgs) => {
   await instance
-    .post(`/api/posts/${id}/comments`, {
-      headers: {
-        ...makeHeaders(accessToken),
-      },
-    })
+    .post(`/api/posts/${id}/like`, {}, { headers: makeHeaders(accessToken) })
     .then((response) => {
       if (response.data.success === true) {
         console.log(response);

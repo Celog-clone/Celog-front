@@ -1,58 +1,61 @@
 import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import styled from "styled-components";
 import { addComment, deleteComment, updateComment, getDetail } from "api";
 import { FaUserCircle } from "react-icons/fa";
 import { useCookies } from "react-cookie";
+import { instance } from "api";
+import { useParams } from "react-router-dom";
 
-function Comment({ id, queryClient, detail, setDetail }) {
+function Comment() {
   const [cookies] = useCookies(["Access-Token"]);
   const [comments, setComments] = useState("");
   const [updateComments, setUpdateComments] = useState("");
   const [edit, setEdit] = useState(false);
 
-  const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
-    onSuccess: (response) => {
-      setDetail(response.data.response.commentList.reverse());
-    },
-  });
+  // const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
+  //   onSuccess: (response) => {
+  //     setDetail(response.data.response.commentList.reverse());
+  //   },
+  // });
 
-  //댓글 추가
-  const { mutate: addCommentMutate } = useMutation(
-    () => addComment(`${id}`, cookies["Access-Token"], comments),
-    {
-      onSuccess: () => queryClient.invalidateQueries("getDetail"),
-    }
-  );
+  // //댓글 추가
+  // const queryClient = useQueryClient();
+  // const { mutate: addCommentMutate } = useMutation(
+  //   () => addComment(`${id}`, cookies["Access-Token"], comments),
+  //   {
+  //     onSuccess: () => queryClient.invalidateQueries("getDetail"),
+  //   }
+  // );
 
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
+  // const onSubmitHandler = (event) => {
+  //   event.preventDefault();
 
-    addCommentMutate();
-    alert("댓글 등록 완료!");
-    setComments("");
-    setDetail([...detail, comments]);
-  };
+  //   addCommentMutate();
+  //   alert("댓글 등록 완료!");
+  //   setComments("");
+  //   setDetail([...detail, comments]);
+  // };
 
-  //댓글 삭제
-  const { mutate: delCommentMutate } = useMutation(
-    () => deleteComment(`${id}`, cookies["Access-Token"]),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("getDetail");
-      },
-    }
-  );
+  // //댓글 삭제
+  // const { mutate: delCommentMutate } = useMutation(
+  //   () => deleteComment(`${id}`, cookies["Access-Token"]),
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries("getDetail");
+  //     },
+  //   }
+  // );
 
-  const onDeleteCommentHandler = () => {
-    const message = window.confirm("댓글을 삭제하시겠습니까?");
-    if (message) {
-      delCommentMutate();
-      setDetail([...detail]);
-    } else {
-      return;
-    }
-  };
+  // const onDeleteCommentHandler = () => {
+  //   const message = window.confirm("댓글을 삭제하시겠습니까?");
+  //   if (message) {
+  //     delCommentMutate();
+  //     setDetail([...detail]);
+  //   } else {
+  //     return;
+  //   }
+  // };
 
   //댓글 수정
   const onEditMode = () => {
@@ -60,28 +63,101 @@ function Comment({ id, queryClient, detail, setDetail }) {
     setUpdateComments(detail.comments);
   };
 
-  const { mutate: updateCommentMutate } = useMutation(
-    () => updateComment(`${id}`, cookies["Access-Token"], updateComments),
+  // const { mutate: updateCommentMutate } = useMutation(
+  //   () => updateComment(`${id}`, cookies["Access-Token"], updateComments),
+  //   {
+  //     onSuccess: () => {
+  //       queryClient.invalidateQueries("getDetail");
+  //     },
+  //   }
+  // );
+
+  // const onUpdateCommentHandler = (event) => {
+  //   event.preventDefault();
+  //   updateCommentMutate();
+  //   setUpdateComments("");
+  //   onEditMode();
+  //   setDetail([...detail, updateComments]);
+  // };
+  //댓글 조회
+  const { id } = useParams();
+  const [detail, setDetail] = useState({});
+  const getComment = async () => {
+    const data = await instance.get(`/api/posts/${id}`);
+    return data;
+  };
+  const { data } = useQuery("celog", getComment, {
+    onSuccess: (response) => {
+      console.log(response.data.commentList);
+      setDetail(response.data.response.commentList.reverse());
+    },
+  });
+
+  //댓글 추가
+  const queryClient = useQueryClient();
+  const addCommentMutation = useMutation(addComment, cookies["Access-Token"], {
+    onSuccess: () => queryClient.invalidateQueries("celog"),
+  });
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault();
+    const newComment = {
+      id: id,
+      comments: comments,
+    };
+    addCommentMutation.mutate(newComment);
+    alert("댓글 등록 완료!");
+    setComments("");
+    setDetail([...detail, newComment]);
+  };
+
+  //댓글 삭제
+  const deleteCommentMutation = useMutation(
+    deleteComment,
+    cookies["Access-Token"],
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("getDetail");
+        queryClient.invalidateQueries("celog");
+      },
+    }
+  );
+
+  const onDeleteCommentHandler = (id) => {
+    const message = window.confirm("댓글을 삭제하시겠습니까?");
+    if (message) {
+      deleteCommentMutation.mutate(id);
+      setDetail([...detail]);
+    } else {
+      return;
+    }
+  };
+
+  //댓글 수정
+  const updateCommentMutation = useMutation(
+    updateComment,
+    cookies["Access-Token"],
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("celog");
       },
     }
   );
 
   const onUpdateCommentHandler = (event) => {
     event.preventDefault();
-    updateCommentMutate();
-    setUpdateComments("");
-    onEditMode();
-    setDetail([...detail, updateComments]);
+    const payload = {
+      id: id,
+      comments: updateComments,
+    };
+    updateCommentMutation.mutate(payload);
+    setDetail(payload);
   };
 
   return (
     <>
       <StWrap>
         <StCommentAddBox>
-          <div>댓글 3개</div>
+          <div>댓글 0개</div>
           <form onSubmit={onSubmitHandler}>
             <StInput
               type="text"
@@ -163,7 +239,7 @@ const StInput = styled.input`
   outline: none;
   border-radius: 5px;
   padding: 16px;
-  width: 770px;
+  width: 800px;
   height: 50px;
   margin-bottom: 20px;
   margin-top: 15px;
