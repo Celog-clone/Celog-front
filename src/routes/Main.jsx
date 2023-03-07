@@ -60,7 +60,7 @@ function Main() {
                   <StText>{item.contents}</StText>
                 </StContents>
                 <StDate>
-                  {item.createdAt} · {item.commentsCount}개의 댓글
+                  {item.createdAt.slice(0, 10)} · {item.commentsCount}개의 댓글
                 </StDate>
                 <StFooter>
                   <div>{item.nickname}</div>

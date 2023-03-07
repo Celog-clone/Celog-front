@@ -6,10 +6,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { useCookies } from "react-cookie";
 
 function Comment({ id, queryClient, detail, setDetail }) {
-  const [cookies] = useCookies(["Access-Token"]);
+  const [cookies] = useCookies(["Access-Token", "nickname"]);
   const [comments, setComments] = useState("");
   const [updateComments, setUpdateComments] = useState("");
-  const [edit, setEdit] = useState(false);
+  const [edit, setEdit] = useState({ commentId: 0, isEdit: false });
 
   const { mutate: addCommentMutate } = useMutation(addComment, {
     onSuccess: () => queryClient.invalidateQueries("getPost"),
@@ -47,8 +47,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
 
   //댓글 수정
   const onEditMode = (commentId) => {
-    setEdit(!edit);
-    setUpdateComments(detail.comments);
+    setEdit({ commentId: commentId, isEdit: !edit.isEdit });
   };
 
   const { mutate: updateCommentMutate } = useMutation(updateComment, {
@@ -66,6 +65,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
       comments: updateComments,
     });
     setUpdateComments("");
+    onEditMode(commentId);
     setDetail([...detail, updateComments]);
   };
 
@@ -89,7 +89,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
         <StNewCommentBox>
           {detail?.commentList?.map((item) => {
             return (
-              <div>
+              <div key={item.id}>
                 <StCommentTopBox>
                   <StCommentTop>
                     <FaUserCircle style={{ fontSize: "50px" }} />
@@ -109,14 +109,15 @@ function Comment({ id, queryClient, detail, setDetail }) {
                     </StChangeBtn>
                   </StBtns>
                 </StCommentTopBox>
-                {edit ? (
+                {edit.commentId === item.id && edit.isEdit === true ? (
                   // 수정 모드
-                  <div>
+                  <StUpdateCommentBox>
                     <form onSubmit={(e) => onUpdateCommentHandler(e, item.id)}>
-                      <input
+                      <StUpdateComment
                         type="text"
                         name="updateTitle"
                         value={updateComments}
+                        placeholder={item.comments}
                         onChange={(event) => {
                           setUpdateComments(event.target.value);
                         }}
@@ -128,7 +129,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
                         <StUpdateBtn>수정하기</StUpdateBtn>
                       </StUpdateBtns>
                     </form>
-                  </div>
+                  </StUpdateCommentBox>
                 ) : (
                   // 수정 전
                   <div>
@@ -229,9 +230,26 @@ const StContent = styled.div`
   margin-top: 20px;
 `;
 
+const StUpdateCommentBox = styled.div`
+  margin-bottom: 50px;
+`;
+
+const StUpdateComment = styled.input`
+  border: 1px solid #e9ecef;
+  outline: none;
+  border-radius: 5px;
+  padding: 16px;
+  width: 800px;
+  height: 50px;
+  margin-bottom: 20px;
+  margin-top: 15px;
+  ::placeholder {
+    font-size: 16px;
+  }
+`;
+
 const StUpdateBtns = styled.div`
   display: flex;
-  margin-top: 10px;
   float: right;
   gap: 10px;
 `;
@@ -240,7 +258,7 @@ const StCancelBtn = styled.button`
   border: none;
   background-color: transparent;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 15px;
   margin: auto 0;
   height: 2.8rem;
   border-radius: 5px;
@@ -257,14 +275,14 @@ const StUpdateBtn = styled.button`
   background-color: #12b886;
   color: white;
   border: none;
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 800;
-  height: 2.8rem;
+  height: 2.3rem;
   border-radius: 5px;
   text-align: center;
-  line-height: 2.5rem;
-  padding-right: 20px;
-  padding-left: 20px;
+  line-height: 2rem;
+  padding-right: 15px;
+  padding-left: 15px;
   cursor: pointer;
   &:hover {
     background-color: #20c997;
