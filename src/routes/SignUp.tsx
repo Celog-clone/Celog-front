@@ -39,10 +39,11 @@ const SignUp = () => {
 
   const { mutate } = useMutation(signup, {
     onSuccess: (response) => {
-      console.log(response);
-      if (response) {
+      if (response?.data?.status === 200) {
         alert("회원가입 성공!");
         navigate("/signin");
+      } else {
+        alert("회원가입 실패!");
       }
     },
   });

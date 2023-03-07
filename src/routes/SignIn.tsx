@@ -33,11 +33,13 @@ const SignIn = () => {
 
   const { mutate } = useMutation(signin, {
     onSuccess: (response) => {
-      if (response) {
+      if (response?.data?.response.status === 200) {
         setCookie("Access-Token", response?.headers.authorization.substr(7));
-        setCookie("nickname", response?.data.nickname);
+        setCookie("nickname", response?.data.response.nickname);
         alert("로그인 성공!");
         navigate("/");
+      } else {
+        alert("로그인 실패!");
       }
     },
   });

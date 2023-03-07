@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { addPost } from "api";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { useCookies } from "react-cookie";
 
 function Post() {
   //데이터 조회
@@ -12,7 +12,7 @@ function Post() {
   const queryClient = useQueryClient();
   const addPostMutation = useMutation(addPost, {
     onSuccess: () => {
-      queryClient.invalidateQueries("getPost");
+      queryClient.invalidateQueries("getPosts");
     },
   });
 

@@ -51,3 +51,21 @@ export interface Comment {
   createAt: string;
   modifiedAt: string;
 }
+
+export interface AddPostArgs {
+  accessToken: string;
+  formData: FormData;
+}
+
+export interface PostArgs {
+  id: string;
+  accessToken: string;
+}
+
+export interface UpdatePostArgs extends PostArgs {
+  formData: FormData;
+}
+
+export interface AddCommentArgs extends PostArgs {
+  comments: string;
+}

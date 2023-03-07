@@ -5,7 +5,7 @@ import { Divider, Stack } from "@mui/material";
 import { Favorite } from "@mui/icons-material";
 import { getMyPosts } from "api";
 
-const data = [
+const data2 = [
   {
     id: 1,
     title: "title",
@@ -33,8 +33,10 @@ const data = [
 ];
 
 const MyPageCardList = () => {
-  const [cookies] = useCookies(["Access-Token", "nickname"]);
-  // const { data } = useQuery("getMyPosts", () => getMyPosts(cookies["nickname"],cookies["Access-Token"]));
+  const [cookies] = useCookies(["Access-Token"]);
+  const { data } = useQuery("getMyPosts", () =>
+    getMyPosts(cookies["Access-Token"])
+  );
 
   return (
     <StWrapper>
@@ -45,7 +47,7 @@ const MyPageCardList = () => {
         alignItems="center"
         justifyContent="center"
       >
-        {data.map((post) => (
+        {data2.map((post) => (
           <StPostCardBox key={post.id}>
             <StPostCardImg src={post.image} />
             <StPostCardTitle>{post.title}</StPostCardTitle>

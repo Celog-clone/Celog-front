@@ -3,14 +3,14 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { Header } from "components";
-import { getPost } from "api";
+import { getPosts } from "api";
 
 function Main() {
   const navigate = useNavigate();
   const [list, setList] = useState([]);
-  const { data } = useQuery("getPost", getPost, {
+  const { data } = useQuery("getPosts", getPosts, {
     onSuccess: (response) => {
-      setList(response);
+      setList(response.data.response);
     },
   });
 
@@ -55,6 +55,7 @@ export default Main;
 const StWrap = styled.div`
   padding: 20px 40px;
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   flex-wrap: wrap;
   overflow: hidden;

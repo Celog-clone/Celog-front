@@ -1,12 +1,11 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { useCookies } from "react-cookie";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import styled from "styled-components";
-import { deletePost, updatePost, getDetail, postLike } from "api";
+import { deletePost, updatePost, getPost, postLike } from "api";
 import { CommentList, Header } from "components";
-import { instance } from "api";
 
 function Detail() {
   const { id } = useParams();
@@ -15,27 +14,22 @@ function Detail() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { data } = useQuery("getDetail", () => getDetail(`${id}`), {
+  const { data } = useQuery("getPost", () => getPost(`${id}`), {
     onSuccess: (response) => {
-      console.log(response.data.response);
       setDetail(response.data.response);
     },
   });
-  console.log(data);
 
   //상세페이지 삭제
-  const { mutate: delPostMutate } = useMutation(
-    () => deletePost(`${id}`, cookies["Access-Token"]),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("getDetail");
-      },
-    }
-  );
+  const { mutate: delPostMutate } = useMutation(deletePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("getPosts");
+    },
+  });
   const onDeleteHandler = () => {
     const message = window.confirm("삭제하시겠습니까?");
     if (message) {
-      delPostMutate();
+      delPostMutate({ id, accessToken: cookies["Access-Token"] });
       navigate("/");
     } else {
       return;
@@ -66,6 +60,7 @@ function Detail() {
   };
 
   const onImgHandler = (event) => {
+    event.preventDefault();
     const files = event.currentTarget.files;
     setImgView([]);
     if (files) {
@@ -85,14 +80,11 @@ function Detail() {
       }
     }
   };
-  const { mutate: updatePostMutate } = useMutation(
-    (payload) => updatePost(`${id}`, cookies["Access-Token"], payload),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("getDetail");
-      },
-    }
-  );
+  const { mutate: updatePostMutate } = useMutation(updatePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("getPosts");
+    },
+  });
   const onUpdateHandler = (event) => {
     event.preventDefault();
     const formData = new FormData();
@@ -106,7 +98,11 @@ function Detail() {
       image: formData.get("file"),
     };
 
-    updatePostMutate(payload);
+    updatePostMutate({
+      id,
+      accessToken: cookies["Access-Token"],
+      formData: payload,
+    });
 
     setUpdateTitle("");
     setUpdateContents("");
@@ -119,7 +115,7 @@ function Detail() {
   //좋아요
   const { mutate: postLikeMutate } = useMutation(postLike, {
     onSuccess: () => {
-      queryClient.invalidateQueries("getDetail");
+      queryClient.invalidateQueries("getPost");
     },
   });
 
@@ -142,7 +138,7 @@ function Detail() {
                   setUpdateTitle(event.target.value);
                 }}
               />
-              <StLine></StLine>
+              <StLine />
               <StImgBtn onClick={onImgButton}>이미지 업로드</StImgBtn>
               <div>
                 {imgView &&
@@ -212,10 +208,10 @@ function Detail() {
                 <div>{detail.likeCount}</div>
               </StHeartBox>
               <CommentList
-              // id={id}
-              // queryClient={queryClient}
-              // detail={detail}
-              // setDetail={setDetail}
+                id={id}
+                queryClient={queryClient}
+                detail={detail}
+                setDetail={setDetail}
               />
             </>
           )}
