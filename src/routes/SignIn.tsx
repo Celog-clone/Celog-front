@@ -117,7 +117,7 @@ const SignIn = () => {
               로그인
             </Button>
             <StSignUpLinkWrapper>
-              <span>회원이 아니신가요?</span>
+              <span style={{ color: "#111" }}>회원이 아니신가요?</span>
               <Link to="/signup">
                 <div style={{ color: "blue" }}>회원가입</div>
               </Link>
