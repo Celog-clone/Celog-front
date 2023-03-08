@@ -151,6 +151,8 @@ const StTitleInput = styled.input`
   height: 66px;
   outline: none;
   border: none;
+  border-radius: 10px;
+  padding: 15px 0px 0px 15px;
   ::placeholder {
     font-size: 40px;
     font-weight: 900;
@@ -167,13 +169,14 @@ const StImgBtn = styled.button`
   border: none;
   cursor: pointer;
   height: 30px;
+  border-radius: 10px;
   &:hover {
     background-color: #e9ecef;
   }
 `;
 
 const StImg = styled.img`
-  width: 654.49px;
+  width: 100%;
   height: 300px;
 `;
 
@@ -181,13 +184,15 @@ const StContentInput = styled.textarea`
   height: 300px;
   outline: none;
   border: none;
+  border-radius: 10px;
+  padding: 15px 0px 0px 15px;
   ::placeholder {
     font-size: 18px;
   }
 `;
 
 const StButtons = styled.div`
-  width: 680px;
+  width: 47%;
   height: 80px;
   line-height: 80px;
   display: flex;

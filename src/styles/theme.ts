@@ -13,16 +13,19 @@ export const GlobalStyle = createGlobalStyle`
     color:inherit;
   }
   
-  body {}
+  body {
+    color: ${({ theme }) => theme.textColor};
+    background-color: ${({ theme }) => theme.bgColor};
+    transition-duration: 0.5s;
+  }
 `;
 
-const color = {
-  black: "#111",
-  white: "#fff",
+export const defaultTheme: DefaultTheme = {
+  textColor: "#111",
+  bgColor: "#fff",
 };
 
-export type Color = typeof color;
-
-export const theme: DefaultTheme = {
-  color,
+export const darkTheme: DefaultTheme = {
+  textColor: "#fff",
+  bgColor: "#111",
 };

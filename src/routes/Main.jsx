@@ -84,8 +84,10 @@ const StWrap = styled.div`
   flex-wrap: wrap;
   gap: 20px;
   flex-wrap: wrap;
-  overflow: hidden;
   margin: 0 auto;
+  color: ${({ theme }) => theme.textColor};
+  background-color: ${({ theme }) => theme.bgColor};
+  transition-duration: 0.5s;
 `;
 
 const StCard = styled.div`

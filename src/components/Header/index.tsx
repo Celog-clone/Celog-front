@@ -89,16 +89,16 @@ const Header = ({ isSearchBarShow, setAllList, setList }: Props) => {
               onChange={(e) => handleChangeSearchInput(e)}
             />
             <IconButton onClick={handleClickSearch}>
-              <Search />
+              <StSearch />
             </IconButton>
           </div>
         )}
         <IconButton onClick={handleClickMode}>
-          {isLight ? <LightMode /> : <DarkMode />}
+          {isLight ? <StLightMode color="action" /> : <StDarkMode />}
         </IconButton>
         <StCreateBtn onClick={() => navigate("/post")}>새 글 작성</StCreateBtn>
         <IconButton onClick={handleClickMyIcon}>
-          <AccountCircle fontSize="large" />
+          <StAccount fontSize="large" />
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -129,6 +129,9 @@ const StContainer = styled.div`
   width: 100%;
   padding: 20px 50px;
   border-bottom: 1px solid gainsboro;
+  color: ${({ theme }) => theme.textColor};
+  background-color: ${({ theme }) => theme.bgColor};
+  transition-duration: 0.5s;
 `;
 
 const StLogo = styled(Link)`
@@ -152,12 +155,15 @@ const StCreateBtn = styled.button`
   padding: 0px 15px;
   border-radius: 30px;
   transition-duration: 0.2s;
-  color: black;
-  background-color: white;
+  color: ${({ theme }) => theme.textColor};
+  background-color: ${({ theme }) => theme.bgColor};
+  border: 1px solid ${({ theme }) => theme.textColor};
+  transition-duration: 0.5s;
   cursor: pointer;
   &:hover {
-    color: white;
-    background-color: black;
+    color: ${({ theme }) => theme.bgColor};
+    background-color: ${({ theme }) => theme.textColor};
+    border: 1px solid ${({ theme }) => theme.bgColor};
   }
 `;
 
@@ -178,4 +184,32 @@ const StLoading = styled(CircularProgress)`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99;
+`;
+
+const StSearch = styled(Search)`
+  &:nth-child(1) {
+    color: ${({ theme }) => theme.textColor};
+    background-color: ${({ theme }) => theme.bgColor};
+  }
+`;
+
+const StLightMode = styled(LightMode)`
+  &:nth-child(1) {
+    color: ${({ theme }) => theme.textColor};
+    background-color: ${({ theme }) => theme.bgColor};
+  }
+`;
+
+const StDarkMode = styled(DarkMode)`
+  &:nth-child(1) {
+    color: ${({ theme }) => theme.textColor};
+    background-color: ${({ theme }) => theme.bgColor};
+  }
+`;
+
+const StAccount = styled(AccountCircle)`
+  &:nth-child(1) {
+    color: ${({ theme }) => theme.textColor};
+    background-color: ${({ theme }) => theme.bgColor};
+  }
 `;
