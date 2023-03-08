@@ -66,8 +66,6 @@ const Header = ({ isSearchBarShow, setAllList, setList }: Props) => {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === "") return;
-
     setSearchKeyword(e.target.value);
     setIsSearchOnChange(true);
     if (timer.current) clearTimeout(timer.current);
