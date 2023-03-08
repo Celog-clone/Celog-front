@@ -54,12 +54,15 @@ export default MyPageCardList;
 const StWrapper = styled.div`
   display: flex;
   justify-content: center;
-  padding: 100px 0px;
+  padding: 20px 100px;
 `;
 
 const StContainer = styled(Stack)`
   width: 50%;
   height: 100%;
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 const StPostCardBox = styled.div`
