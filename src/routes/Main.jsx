@@ -43,7 +43,7 @@ function Main() {
 
   return (
     <>
-      <Header />
+      <Header isSearchBarShow setAllList={setAllList} setList={setList} />
       <StWrap>
         {list.length > 0 &&
           list.map((item) => {
@@ -80,7 +80,7 @@ function Main() {
 export default Main;
 
 const StWrap = styled.div`
-  padding: 20px 40px;
+  padding: 20px 100px;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
