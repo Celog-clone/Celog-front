@@ -33,7 +33,7 @@ const MyPageCardList = () => {
               divider={<Divider flexItem />}
               alignItems="center"
             >
-              <div>{post.modifiedAt}</div>
+              <div>{post.modifiedAt.slice(0, 10)}</div>
               <div>{post.commentsCount}개의 댓글</div>
               <div
                 style={{ display: "flex", alignItems: "center", gap: "3px" }}

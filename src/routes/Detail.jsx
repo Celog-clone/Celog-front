@@ -183,7 +183,7 @@ function Detail() {
                 <StTitle>{detail.title}</StTitle>
                 <StTop>
                   <StDate>
-                    {detail.nickname} · {detail.createdAt.slice(0, 10)}
+                    {detail.nickname} · {detail.modifiedAt.slice(0, 10)}
                   </StDate>
                   {detail.nickname === cookies.nickname && (
                     <div>

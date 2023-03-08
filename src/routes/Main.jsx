@@ -45,33 +45,32 @@ function Main() {
     <>
       <Header isSearchBarShow setAllList={setAllList} setList={setList} />
       <StWrap>
-        {list.length > 0 &&
-          list.map((item) => {
-            return (
-              <StCard
-                onClick={() => {
-                  navigate(`/${item.id}`);
-                }}
-                key={item.id}
-              >
-                <StImg src={item.image} alt="img" />
-                <StContents>
-                  <StTitle>{item.title}</StTitle>
-                  <StText>{item.contents}</StText>
-                </StContents>
-                <StDate>
-                  {item.createdAt.slice(0, 10)} · {item.commentsCount}개의 댓글
-                </StDate>
-                <StFooter>
-                  <div>{item.nickname}</div>
-                  <StLikeBox>
-                    <div>{item.likeCount}</div>
-                    <div>❤︎</div>
-                  </StLikeBox>
-                </StFooter>
-              </StCard>
-            );
-          })}
+        {list?.map((item) => {
+          return (
+            <StCard
+              onClick={() => {
+                navigate(`/${item.id}`);
+              }}
+              key={item.id}
+            >
+              <StImg src={item.image} alt="img" />
+              <StContents>
+                <StTitle>{item.title}</StTitle>
+                <StText>{item.contents}</StText>
+              </StContents>
+              <StDate>
+                {item.modifiedAt.slice(0, 10)} · {item.commentsCount}개의 댓글
+              </StDate>
+              <StFooter>
+                <div>{item.nickname}</div>
+                <StLikeBox>
+                  <div>{item.likeCount}</div>
+                  <div>❤︎</div>
+                </StLikeBox>
+              </StFooter>
+            </StCard>
+          );
+        })}
       </StWrap>
     </>
   );
