@@ -48,6 +48,7 @@ function Comment({ id, queryClient, detail, setDetail }) {
   //댓글 수정
   const onEditMode = (commentId) => {
     setEdit({ commentId: commentId, isEdit: !edit.isEdit });
+    console.log(detail);
   };
 
   const { mutate: updateCommentMutate } = useMutation(updateComment, {
@@ -94,20 +95,24 @@ function Comment({ id, queryClient, detail, setDetail }) {
                   <StCommentTop>
                     <FaUserCircle style={{ fontSize: "50px" }} />
                     <StData>
-                      <div style={{ fontWeight: "600" }}>{item.nickname}</div>
+                      <div style={{ fontWeight: "600" }}>
+                        {item.comment_nickname}
+                      </div>
                       <div style={{ color: "gray" }}>{item.createAt}</div>
                     </StData>
                   </StCommentTop>
-                  <StBtns>
-                    <StChangeBtn onClick={() => onEditMode(item.id)}>
-                      수정
-                    </StChangeBtn>
-                    <StChangeBtn
-                      onClick={() => onDeleteCommentHandler(item.id)}
-                    >
-                      삭제
-                    </StChangeBtn>
-                  </StBtns>
+                  {item.comment_nickname === cookies.nickname && (
+                    <StBtns>
+                      <StChangeBtn onClick={() => onEditMode(item.id)}>
+                        수정
+                      </StChangeBtn>
+                      <StChangeBtn
+                        onClick={() => onDeleteCommentHandler(item.id)}
+                      >
+                        삭제
+                      </StChangeBtn>
+                    </StBtns>
+                  )}
                 </StCommentTopBox>
                 {edit.commentId === item.id && edit.isEdit === true ? (
                   // 수정 모드
