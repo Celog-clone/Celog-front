@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import styled from "styled-components";
 import { Button, TextField } from "@mui/material";
@@ -116,6 +116,12 @@ const SignIn = () => {
             <Button type="submit" variant="outlined" size="large">
               로그인
             </Button>
+            <StSignUpLinkWrapper>
+              <span>회원이 아니신가요?</span>
+              <Link to="/signup">
+                <div style={{ color: "blue" }}>회원가입</div>
+              </Link>
+            </StSignUpLinkWrapper>
           </StInputs>
         </StForm>
       </StContainer>
@@ -177,4 +183,12 @@ const StInputs = styled.div`
   gap: 20px;
   width: 100%;
   height: 100%;
+`;
+
+const StSignUpLinkWrapper = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  gap: 5px;
+  font-size: 0.75rem;
 `;
